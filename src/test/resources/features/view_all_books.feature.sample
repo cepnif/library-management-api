@@ -1,0 +1,19 @@
+Feature: View All Books
+  Description:
+  As a library user
+  I want to view all books in the library
+  So that I can browse the available collection.
+
+  Background:
+    Given the library API is available
+
+  Scenario: Successfully retrieve all books
+    When a GET request is sent to "/books/all"
+    Then the request should return status 200
+    And the response should contain a list of books
+
+  Scenario: Handle server error while retrieving books
+    Given the library service is down
+    When a GET request is sent to "/books/all"
+    Then the request should return status 500
+    And the response should indicate an error fetching books

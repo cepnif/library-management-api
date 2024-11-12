@@ -1,0 +1,28 @@
+Feature: Borrow a Book
+  Description:
+  As a library member
+  I want to borrow a book
+  So that I can take it out for reading.
+
+  Background:
+    Given the member has logged in with a valid token
+
+  Scenario Outline: Borrow a book with different availability statuses
+    Given the book <title> has <availability> copies available
+    When the member borrows the book with:
+      | field    | value       |
+      | title    | <title>     |
+      | username | validUser   |
+    Then the request should return status <status_code>
+    And the response should indicate "<message>"
+
+    Examples:
+      | title           | availability | status_code | message               |
+      | AvailableBook   | available    | 201         | book borrowed         |
+      | UnavailableBook | none         | 400         | book unavailable      |
+
+  Scenario: Attempt to borrow with an invalid token
+    Given the member has an invalid authorization token
+    When the member borrows the book with valid details
+    Then the request should return status 401
+    And the response should indicate "authorization failure"

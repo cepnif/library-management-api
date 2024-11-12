@@ -1,0 +1,19 @@
+Feature: Search Books by Author
+  Description:
+  As a library user
+  I want to search for books by author
+  So that I can find books by specific authors in the library.
+
+  Background:
+    Given the search API is available
+
+  Scenario Outline: Search for books by author
+    When a GET request is sent to "/books/author/<author>"
+    Then the request should return status <status_code>
+    And the response should indicate "<message>"
+
+    Examples:
+      | author        | status_code | message            |
+      | JKRowling     | 200         | books by author    |
+      | UnknownAuthor | 200         | no results found   |
+      |               | 404         | missing parameter  |

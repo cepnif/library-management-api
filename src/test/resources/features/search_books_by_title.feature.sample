@@ -1,0 +1,19 @@
+Feature: Search Book by Title
+  Description:
+  As a library user
+  I want to search for books by title
+  So that I can find specific books available in the library.
+
+  Background:
+    Given the search API is available
+
+  Scenario Outline: Search for a book by title
+    When a GET request is sent to "/books/title/<title>"
+    Then the request should return status <status_code>
+    And the response should indicate "<message>"
+
+    Examples:
+      | title            | status_code | message            |
+      | HarryPotter      | 200         | books found        |
+      | NonExistentTitle | 200         | no results found   |
+      |                  | 404         | missing parameter  |

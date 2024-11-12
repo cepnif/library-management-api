@@ -1,0 +1,28 @@
+Feature: Return a Book
+  Description:
+  As a library member
+  I want to return a borrowed book
+  So that it becomes available for other members.
+
+  Background:
+    Given the member has logged in with a valid token
+
+  Scenario Outline: Return a book with different borrowing statuses
+    Given the book <title> has been <borrow_status> by the user
+    When the member returns the book with:
+      | field    | value       |
+      | title    | <title>     |
+      | username | validUser   |
+    Then the request should return status <status_code>
+    And the response should indicate "<message>"
+
+    Examples:
+      | title          | borrow_status | status_code | message                       |
+      | BorrowedBook   | borrowed      | 200         | book returned successfully    |
+      | NotBorrowedBook| not borrowed  | 404         | no active borrowing record    |
+
+  Scenario: Return attempt with an invalid token
+    Given the member has an invalid authorization token
+    When the member returns the book with valid details
+    Then the request should return status 401
+    And the response should indicate "authorization failure"

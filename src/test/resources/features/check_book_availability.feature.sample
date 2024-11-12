@@ -1,0 +1,20 @@
+Feature: Check Book Availability
+  Description:
+  As a library user
+  I want to check the availability of a book
+  So that I can know if copies are available for borrowing.
+
+  Background:
+    Given the availability API is available
+
+  Scenario Outline: Check availability of a book by title
+    When a GET request is sent to "/books/availability/<title>"
+    Then the request should return status <status_code>
+    And the response should indicate "<message>"
+
+    Examples:
+      | title           | status_code | message                |
+      | HarryPotter     | 200         | available copies       |
+      | PopularBook     | 200         | zero available copies  |
+      | UnknownBook     | 404         | book not found         |
+      |                 | 400         | missing parameter      |

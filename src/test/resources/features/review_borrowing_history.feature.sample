@@ -1,0 +1,32 @@
+Feature: View Borrowing History
+  Description:
+  As a library member
+  I want to view my borrowing history
+  So that I can see a record of all books I have borrowed.
+
+  Background:
+    Given the member has logged in with a valid token
+
+  Scenario Outline: Retrieve borrowing history based on records
+    Given the member has <history_status> borrowing history
+    When the member views their borrowing history with:
+      | field    | value       |
+      | username | validUser   |
+    Then the request should return status <status_code>
+    And the response should indicate "<message>"
+
+    Examples:
+      | history_status | status_code | message                 |
+      | records        | 200         | borrowing history found |
+      | no records     | 200         | no borrowing records    |
+
+  Scenario: View history with an invalid token
+    Given the member has an invalid authorization token
+    When the member views their borrowing history with valid details
+    Then the request should return status 401
+    And the response should indicate "authorization failure"
+
+  Scenario: View history with missing username
+    When the member views their borrowing history without providing a username
+    Then the request should return status 400
+    And the response should indicate "missing parameter"
